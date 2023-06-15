@@ -1,0 +1,29 @@
+
+
+sudo docker run -d --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name firefox firefox_test
+
+exemplo: sudo docker run -d --net=oai-public-access --ip 192.168.72.88 --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name firefox firefox_test
+
+resposta 3 do link:
+
+https://stackoverflow.com/questions/16296753/can-you-run-gui-applications-in-a-linux-docker-container 
+
+
+FROM ubuntu:latest
+RUN apt-get update && apt-get install firefox libavcodec-extra libcanberra-gtk-module libcanberra-gtk3-module -y
+COPY sleep.sh /root/sleep.sh
+#USER ruben
+ENV HOME /home/ruben
+CMD /root/sleep.sh
+
+
+https://itslinuxfoss.com/fix-failed-load-module-canberra-gtk-module-error/
+https://askubuntu.com/questions/1274143/firefox-not-playing-videos-on-ubuntu-20-04-4-lts
+
+PRECISO FAZER NO HOST: 
+	>> xhost +  
+	
+
+
+
+

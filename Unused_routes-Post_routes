@@ -1,0 +1,85 @@
+"""@app.route('/delay_histogram_Stream_A')
+async def get_delay_histogram_Stream_A():
+    global stream_A
+    file_path = "/UPF_NWDAF/delay_histogram_" + stream_A + ".png"
+    global subprocess_completed
+    if subprocess_completed and os.path.exists(file_path):
+        response = await send_file(file_path, mimetype='image/png')
+        # Add cache control headers
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        return response
+    elif subprocess_completed and not os.path.exists(file_path):
+        response = await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        return response
+    else:
+        return "Please wait until the subprocess completes."
+"""
+
+"""@app.route('/delay_histogram_Stream_B')
+async def get_delay_histogram_Stream_B():
+    global stream_B
+    file_path = "/UPF_NWDAF/delay_histogram_" + stream_B + ".png"
+    global subprocess_completed
+    if subprocess_completed and os.path.exists(file_path):
+        response = await send_file(file_path, mimetype='image/png')
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        return response
+    elif subprocess_completed and not os.path.exists(file_path):
+        response = await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'	
+        return response
+    else:
+        return "Please wait until the subprocess completes." 
+"""                
+"""@app.route("/example.json", methods=["GET", "POST"])
+async def handle_requests():
+    if request.method == "GET":
+        with open("example.json", "r") as f:
+            data = f.read()
+        return Response(data, content_type="application/json")
+    elif request.method == "POST":
+        data = await request.get_json()
+        with open("example.json", "w") as f:
+            f.write(str(data))
+        return Response(str(data), content_type="application/json")
+
+
+
+#### UPLOADS ####
+
+@app.route("/delay_histograms", methods=["POST"])
+async def handle_histogran_request():
+        # Handle POST request
+        file1 = (await request.files)["file1"]
+        file2 = (await request.files)["file2"]
+        
+        if file1 and file2:
+            # Save file1 and file2 to desired locations
+            await file1.save('/home/ruben/Desktop/Tese/share/UPF_NWDAF/delay_histogram_bCAP')
+            await file2.save('/home/ruben/Desktop/Tese/share/UPF_NWDAF/delay_histogram_tCAP')
+            return Response("Files uploaded successfully\n", content_type="text/plain")
+        else:
+            return Response("No files uploaded\n", content_type="text/plain", status=400)
+
+@app.route("/metrics", methods=["POST"])
+async def handle_metrics_request():
+        # Handle POST request
+        file = (await request.files)["file"] 
+        if file:
+            # Save file to desired location
+            await file.save('/home/ruben/Desktop/Tese/share/UPF_NWDAF/metrics.txt')
+            return Response("File uploaded successfully\n", content_type="text/plain")
+        else:
+            return Response("No file uploaded\n", content_type="text/plain", status=400)
+
+"""
+

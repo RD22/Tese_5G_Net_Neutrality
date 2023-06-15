@@ -1,0 +1,50 @@
+#---------------------------------------------------------------------
+# BUILDER IMAGE
+#---------------------------------------------------------------------
+FROM ubuntu:bionic as ueransim-builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -y && apt-get upgrade -y &&\
+    apt install -y make gcc g++ libsctp-dev lksctp-tools\
+    iproute2 wget software-properties-common git
+
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null\
+    | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null\
+    && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'\
+    && apt update && apt install -y cmake
+    
+RUN cmake --version
+
+RUN git clone https://github.com/aligungr/UERANSIM.git && cd UERANSIM && git checkout -f v3.2.5
+COPY docker/ /UERANSIM/docker/
+
+RUN make -C UERANSIM
+
+#---------------------------------------------------------------------
+# TARGET IMAGE
+#---------------------------------------------------------------------
+FROM ubuntu:bionic as ueransim
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DISPLAY=$DISPLAY
+RUN apt update && apt-get install -y iproute2 iputils-ping net-tools \
+    iperf3 libsctp-dev lksctp-tools firefox xauth libavcodec-extra libcanberra-gtk-module \ 
+    libcanberra-gtk3-module tshark wireshark \
+    && apt-get install -y libavcodec-dev libavcodec57 \
+    && apt-get install -y libcodec2-dev \
+    && apt-get install -y libopencv-imgcodecs-dev libopencv-imgcodecs3.2 \
+    && firefox -CreateProfile "ruben /root/.mozilla/firefox/ruben/" \
+    && echo 'user_pref("media.eme.enabled", true);' >> /root/.mozilla/firefox/ruben/prefs.js \
+    && echo 'user_pref("media.gmp-widevinecdm.enabled", true);' >> /root/.mozilla/firefox/ruben/prefs.js \
+    && echo 'user_pref("media.gmp-widevinecdm.visible", true);' >> /root/.mozilla/firefox/ruben/prefs.js \
+    && echo 'user_pref("layers.acceleration.enabled", false);' >> /root/.mozilla/firefox/ruben/prefs.js
+
+
+WORKDIR /ueransim/etc
+COPY --from=ueransim-builder /UERANSIM/docker/custom*.yaml  /ueransim/etc/
+
+WORKDIR /ueransim/bin
+COPY --from=ueransim-builder /UERANSIM/build/*  /ueransim/bin/
+COPY --from=ueransim-builder /UERANSIM/docker/entrypoint.sh . 
+
+ENTRYPOINT ["/ueransim/bin/entrypoint.sh"]

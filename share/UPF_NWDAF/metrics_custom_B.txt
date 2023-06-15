@@ -1,0 +1,6 @@
+	Metrics for custom_B (11 -> 15): 
+ 
+ Packet loss = 34.29 % 
+ Average delay = -77.89 ms 
+ Standard deviation of delay = 24.90 ms 
+ Throughput = 3.0 Mbit/s 

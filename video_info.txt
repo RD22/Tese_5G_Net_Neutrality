@@ -1,0 +1,2 @@
+File name:           video.pcap
+Data bit rate:       6528 kbps

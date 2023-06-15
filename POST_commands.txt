@@ -1,0 +1,20 @@
+curl -X POST -H "Content-Type: application/json" -d '{"name": "John", "age": 30}' https://127.0.0.1:8000/example.json --http2
+
+#### POST metrics to the NEF server ####
+
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/home/ruben/Desktop/hello.txt" https://127.0.0.1:8000/metrics -k
+
+docker exec oai-NWDAF curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/home/ruben/Desktop/hello.txt" https://127.0.0.1:8000/hello.txt -k
+
+#### POST histograms to the NEF server  #####
+
+curl -X POST -H "Content-Type: multipart/form-data" -F "file1=@/home/ruben/Desktop/delay_histogram_bCAP.png" -F "file2=@/home/ruben/Desktop/delay_histogram_tCAP.png" https://127.0.0.1:8000/delay_histograms -kW
+
+
+
+
+
+
+#### UPLOAD TO NEF  ####s	
+
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/UPF_NWDAF_metrics/metrics.txt" https://192.168.70.150:443/metrics -k

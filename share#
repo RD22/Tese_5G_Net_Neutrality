@@ -1,0 +1,11 @@
+import subprocess
+
+command = "capinfos -i /UPF_NWDAF/n3-2_$stream_A.pcap | awk '{print $4}' | tail -n 1"
+result = subprocess.run(command, shell=True, capture_output=True, text=True)
+
+if result.returncode == 0:
+    output = result.stdout.strip()  # Save the output in a variable
+    print("Output:", output)
+else:
+    print("An error occurred:", result.stderr)
+

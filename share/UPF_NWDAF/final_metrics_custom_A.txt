@@ -1,0 +1,1 @@
+No stream activity for 52.94.17.140/32 && 12.1.1.2 && HTTP/2 tcp during 25 s

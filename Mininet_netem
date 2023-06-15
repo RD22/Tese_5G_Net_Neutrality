@@ -1,0 +1,26 @@
+# ADD/REMOVE delay
+
+tc qdisc add dev h1-eth0 root netem delay 100ms
+
+tc qdisc del dev h1-eth0 root netem delay 100ms
+
+
+# Variable delay
+
+tc qdisc change dev h1-eth0 root netem delay 100ms 10ms # 100ms +- 10 ms
+
+tc qdisc change dev h1-eth0 root netem delay 100ms 10ms 25%
+
+# Delay distribution
+
+tc qdisc change dev h1-eth0 root netem delay 100ms 20ms distribution normal
+
+___________________________________________________________________________________
+
+# ADD/REMOVE Packet loss
+
+tc qdisc change dev h1-eth0 root netem loss 0.1%
+
+tc qdisc change dev h1-eth0 root netem loss 0.3% 25%
+
+

@@ -1,0 +1,107 @@
+The AF communicates with the UE Application 
+and collects data from UE Application
+
+NWDAF gets information about UE via AF
+AF collects data about UE
+__________________________________________________________
+6.3
+Slice Load level analytics
+
+sources : AMF SMF NSSF	NRF OAM NSACF
+
+_________________________________________________________
+6.4 Observed Service Experience related anyltics
+
+sources: AF, NEF, UE(via AF), AMF, SMF, UPF, OAM
+
+_________________________________________________________
+6.5 Load analytics
+
+sources: NRF, OAM, UPF(UPF load anaytics)
+
+_________________________________________________________
+6.6 Network performance analytics
+
+sources: OAM, NRF, AMF, 
+________________________________________________________
+6.7 UE Related Analytics
+
+_________________________________________________________
+6.8 User data Congestion Analytics
+
+sources: AMF, OAM, UPF
+
+Measurement
+period
+
+Throughput
+UL/DL	
+
+Throughput
+UL/DL (peak)	- Peak Throughput UL/DL over the measurement period.
+
+IP Packet
+Filter Set
+
+Timestamp - Time when measurements are taken.
+
+all of this from UPF or AF
+
+
+__________________________________________________________
+6.9 QOS sustainability Analytics
+
+The consumer of QoS Sustainability analytics may request the NWDAF analytics information regarding the QoS
+change statistics for an Analytics target period in the past in a certain area or the likelihood of a QoS change for an
+Analytics target period in the future in a certain area.
+
+RAN UE throughput -- source : OAM
+QOS flow retainability 	-- source : OAM
+
+__________________________________________________________
+6.10 Dispersion Analytics
+
+Dispersion analytics identifies the location (i.e. areas of interest, TAs, cells) or network slice(s) where a UE, or a group
+of UEs, or any UE disperse most (if not all) of their data volume and sessions transactions (i.e. MM and SM messages).
+The NWDAF shall be able to provide dispersion statistics or predictions and shall be able to collect UE dispersion
+related information from NFs.
+
+sources : AMF, SMF, AF, UPF
+
+UE IP address, application ID, application duration, etc
+_____________________________________________________________
+6.11 WLAN performance analytics
+
+The NWDAF provides WLAN performance analytics to a service consumer NF. The analytics results are generated
+based on the data from other 5GC NFs and OAM. The analytics results, provided in the form of statistics or predictions,
+contain quality and performance of WLAN connection of UE according to UE location and SSID.
+
+sources: OAM,SMF,UPF
+____________________________________________________________________
+
+6.12 Session Management Congestion Control Experience Analytics
+
+source : SMF
+
+____________________________________________________________________
+
+6.13 Redundant Transmission Experience related analytics
+
+sources: OAM, SMF
+
+___________________________________________________________________
+6.14 DN Performance Analytics
+
+This clause specifies how an NWDAF can provide DN Performance Analytics which provides analytics for user plane
+performance (i.e. average/maximum traffic rate, average/maximum packet delay, average packet loss rate) in the form
+of statistics or predictions to a service consumer.
+
+sources: AF,NEF
+
+The DN Performance Analytics may provide one or a combination of the following information:
+- User plane performance analytics for a specific Edge Computing application for a UE, group of UEs, or any UE
+over a specific serving anchor UPF.
+- User plane performance analytics for a specific Edge Computing application for a UE, group of UEs, or any UE
+over a specific DNAI.
+- User plane performance analytics for a specific Edge Computing application for a UE, group of UEs, or any UE
+over a specific Edge Application Server Instance.

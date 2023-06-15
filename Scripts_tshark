@@ -1,0 +1,35 @@
+tshark -i n3-2 -a duration:20 -w UE.pcap & tshark -i n6-3 -a duration:20 -w DN.pcap ; fg
+
+tshark -i n3-2 -a duration:20 -w UE.pcap
+
+tshark -r UE.pcap -Y "tcp.analysis.retransmission || tcp.analysis.out_of_order || tcp.analysis.ack_lost_segment" -w UE_loss.pcap
+
+capinfos -c UE_loss.pcap
+
+######################################################################
+How to measure DL packet loss rate:
+
+
+tirar http3 no firefox --> about:config
+
+60 % -> n3-2   (nota-se influencia)
+
+
+tc qdisc change dev n3-2 root netem loss 60%
+
+tshark -i n6-3 -a duration:20 -w DN.pcap
+
+tshark -r n6-3.pcap -Y "tcp && ip.dst==12.1.1.2" -w n6-3_loss.pcap
+
+capinfos -c DN_loss.pcap
+
+
+tshark -i n3-2 -a duration:20 -w UE.pcap
+
+tshark -r n3-2.pcap -Y "tcp && ip.dst==12.1.1.2" -w n3-2_loss.pcap
+
+capinfos -c UE_loss.pcap
+
+### total packet size in bytes --> capinfos -d UE_loss.pcap 
+				    capinfos -d DN_loss.pcap 
+

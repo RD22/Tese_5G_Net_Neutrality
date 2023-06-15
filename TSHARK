@@ -1,0 +1,14 @@
+tshark -w video.pcap
+
+yt -> tshark -f "net 195.8.12.0/24" -w video.pcap
+
+dailymotion -> tshark -f "net 188.65.126.0/24" -w video.pcap 
+
+
+capinfos -i video.pcap > video_info.txt 2>&1
+
+tail -f video_info.txt
+
+
+
+https://www.researchgate.net/post/how_can_I_see_or_analyze_packet_loss_value_in_wireshark

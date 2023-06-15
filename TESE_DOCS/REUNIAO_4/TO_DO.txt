@@ -1,0 +1,16 @@
+-Can NWDAF get information from data plane? Isto é do UPF, gnb e User equipment?
+
+	-NWDAF can get information from UPF 	DONE (faltar organizar slides)
+
+- What information can the NF's provide to the NWDAF?
+- What Network Function provides information about charging /price?
+
+  	- CHF (charging function) some NF's interect with CHF	DONE
+
+- Fazer um esquema da estrutura do sistema
+  Entidade externa (telecom), como sendo um NF consumer a obter informações do NWDAF e NWDAF a obter informações da rede 5g
+
+	DONE (possíveis retoques)
+
+  
+- Ler artigos sobre Quality of Service (Prof vai enviar)

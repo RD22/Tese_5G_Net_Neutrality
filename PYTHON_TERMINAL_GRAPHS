@@ -1,0 +1,8 @@
+PLOTS PYTHON EM TERMINAL
+
+
+https://stackoverflow.com/questions/37288421/how-to-plot-a-chart-in-the-terminal
+
+lib -> pip install plotext==5.2.8
+
+https://pypi.org/project/plotext/5.2.8/
