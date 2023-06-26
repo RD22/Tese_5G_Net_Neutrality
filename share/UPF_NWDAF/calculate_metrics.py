@@ -10,23 +10,31 @@ import os
 arguments = sys.argv
 
 # Subsequent elements are the command-line arguments
+
+#### Stream A ####
+
 stream_A = arguments[1]
 print(stream_A)
 
-csv_file_path = "/UPF_NWDAF/n6-3_" + stream_A + ".csv"
+csv_file_path = "/UPF_NWDAF/csv/n6-3_" + stream_A + ".csv"
 n6_3_Stream_A = pd.read_csv(csv_file_path)
 
-csv_file_path = "/UPF_NWDAF/n3-2_" + stream_A + ".csv"
+csv_file_path = "/UPF_NWDAF/csv/n3-2_" + stream_A + ".csv"
 n3_2_Stream_A = pd.read_csv(csv_file_path)
+
+
+#### Stream B ####
 
 stream_B = arguments[2]
 print(stream_B)
-csv_file_path = "/UPF_NWDAF/n6-3_" + stream_B + ".csv"
+
+csv_file_path = "/UPF_NWDAF/csv/n6-3_" + stream_B + ".csv"
 n6_3_Stream_B = pd.read_csv(csv_file_path)
 
-csv_file_path = "/UPF_NWDAF/n3-2_" + stream_B + ".csv"
+csv_file_path = "/UPF_NWDAF/csv/n3-2_" + stream_B + ".csv"
 n3_2_Stream_B = pd.read_csv(csv_file_path)
 
+#### Other arguments ####
 
 proto_A = arguments[3]
 proto_B = arguments[4]
@@ -37,7 +45,7 @@ cur_time = int(arguments[5])
 def bitrate_graphs(bitrate,stream):
 	# Load previous bitrate values from file, if needed #
 		
-	previous_bitrate_file = "/UPF_NWDAF/previous_bitrate_{}.txt".format(stream)
+	previous_bitrate_file = "/UPF_NWDAF/temp_files/throughput/previous_bitrate_{}.txt".format(stream)
 		
 	try:
 		with open(previous_bitrate_file, 'r') as file:
@@ -60,25 +68,26 @@ def bitrate_graphs(bitrate,stream):
 	# Create the Bitrate_graph figure
 	
 	Bitrate_graph = plt.figure(figsize=(20, 12))
-	plt.xlabel('Time (s)', fontsize=16)
-	plt.ylabel('Throughput (Mbit/s)', fontsize=16)
-	plt.yticks(fontsize=16)
-	plt.xticks(fontsize=16)
-	plt.title('Bitrate over Time for {}'.format(stream),fontsize=20)
+	plt.xlabel('Time (s)', fontsize=20)
+	plt.ylabel('Throughput (Mbit/s)', fontsize=20)
+	plt.yticks(fontsize=20)
+	plt.xticks(fontsize=20)
+	plt.title('Bitrate over Time for {}'.format(stream),fontsize=24)
 	
 	# Plot the bitrate on the Bitrate_graph figure
 	
 	plt.plot(time, br)
 	
 	# Save the graph #
-	file_path_bitrate = "/UPF_NWDAF/bitrate_graph_{}.png".format(stream)
+	file_path_bitrate = "/UPF_NWDAF/images/bitrate_graph_{}.png".format(stream)
 	Bitrate_graph.savefig(file_path_bitrate)
 
+#### acumulate loss values ####
+	
 def accumulate_loss(loss,stream):
-	#### acumulate loss values ####
 	loss = np.array([loss])
 	
-	file_path = '/UPF_NWDAF/Loss_{}.txt'.format(stream)
+	file_path = '/UPF_NWDAF/temp_files/loss/Loss_{}.txt'.format(stream)
 	try:
 		with open(file_path, 'r') as file:
 			prev_loss = np.fromstring(file.readline().strip(), sep=',')
@@ -98,9 +107,9 @@ def calculate_metrics(n6,n3,stream,proto):
 	if (len(n6) < 5):
 		print("No Video Stream activity for {}!  \n".format(stream))
 		if (stream == stream_A) :
-			file_path = "/UPF_NWDAF/delay_histogram_{}.png".format(stream)
+			file_path = "/UPF_NWDAF/images/delay_histogram_{}.png".format(stream)
 			if os.path.exists(file_path):
-				command = ['rm', '/UPF_NWDAF/delay_histogram_{}.png'.format(stream)]
+				command = ['rm', '/UPF_NWDAF/images/delay_histogram_{}.png'.format(stream)]
 				subprocess.run(command)
 			Metrics_A = "\t {}: - No Video Stream activity! \n ".format(stream)
 			bitrate=0
@@ -109,9 +118,9 @@ def calculate_metrics(n6,n3,stream,proto):
 			accumulate_loss(loss,stream)
 			return Metrics_A
 		elif (stream == stream_B) :
-			file_path = "/UPF_NWDAF/delay_histogram_{}.png".format(stream)
+			file_path = "/UPF_NWDAF/images/delay_histogram_{}.png".format(stream)
 			if os.path.exists(file_path):
-				command = ['rm', '/UPF_NWDAF/delay_histogram_{}.png'.format(stream)]
+				command = ['rm', '/UPF_NWDAF/images/delay_histogram_{}.png'.format(stream)]
 				subprocess.run(command)
 			Metrics_B = "\t {}: - No Video Stream activity! \n ".format(stream)
 			bitrate=0
@@ -125,9 +134,9 @@ def calculate_metrics(n6,n3,stream,proto):
 	elif (len(n3) == 0 ): 
 		print("100 % loss !\n")
 		if (stream == stream_A) :
-			file_path = "/UPF_NWDAF/delay_histogram_{}.png".format(stream)
+			file_path = "/UPF_NWDAF/images/delay_histogram_{}.png".format(stream)
 			if os.path.exists(file_path):
-				command = ['rm', '/UPF_NWDAF/delay_histogram_{}.png'.format(stream)]
+				command = ['rm', '/UPF_NWDAF/images/delay_histogram_{}.png'.format(stream)]
 				subprocess.run(command)
 			Metrics_A = "\t {}: - 100 % loss ! \n ".format(stream)
 			bitrate=0
@@ -136,9 +145,9 @@ def calculate_metrics(n6,n3,stream,proto):
 			accumulate_loss(loss,stream)
 			return Metrics_A
 		elif (stream == stream_B) :
-			file_path = "/UPF_NWDAF/delay_histogram_{}.png".format(stream)
+			file_path = "/UPF_NWDAF/images/delay_histogram_{}.png".format(stream)
 			if os.path.exists(file_path):
-				command = ['rm', '/UPF_NWDAF/delay_histogram_{}.png'.format(stream)]
+				command = ['rm', '/UPF_NWDAF/images/delay_histogram_{}.png'.format(stream)]
 				subprocess.run(command)
 			Metrics_B = "\t {}: - 100 % loss ! \n ".format(stream)
 			bitrate=0
@@ -158,8 +167,36 @@ def calculate_metrics(n6,n3,stream,proto):
 			matched_packets = mask.sum()
 			timepackets_n6 = timestamps_n6[mask].tolist()
 			timepackets_n3 = timestamps_n3[n3[n3.columns[1]].isin(n6[n6.columns[1]])].tolist()
+			
+			print("Matched packets = {} \n".format(matched_packets))
+			print("Lenght of timestamps_n6 = {} \n".format(len(timestamps_n6)))
+			print("Lenght of timepackets_n3 = {} \n".format(len(timepackets_n3)))
+		
 		elif (proto == "HTTP/2"):
-			# Identify and remove duplicates in n3 and n6
+			
+			src_ip_n6 = n6[n6.columns[2]]
+			src_ip_n3 = n3[n3.columns[2]]
+
+			n3_seq = n3.drop_duplicates(subset=[n3.columns[1], n3.columns[2]], keep='last')
+			n6_seq = n6.drop_duplicates(subset=[n6.columns[1], n6.columns[2]], keep='last')
+			sorted_n3_seq = n3_seq.sort_values(by=n3_seq.columns[1])
+
+			sorted_n6_seq = n6_seq.sort_values(by=n6_seq.columns[1])
+
+			mask = sorted_n6_seq[sorted_n6_seq.iloc[:,1].isin(sorted_n3_seq.iloc[:,1])]
+
+			matched_packets = len(mask)
+
+			timepackets_n3 = sorted_n3_seq[sorted_n3_seq.iloc[:, 1].isin(mask.iloc[:, 1])].iloc[:, 0].tolist()
+	
+			timepackets_n6 = sorted_n6_seq[sorted_n6_seq.iloc[:, 1].isin(mask.iloc[:, 1])].iloc[:, 0].tolist()
+
+			print("Matched packets = {} \n".format(matched_packets))
+			print("Lenght of timestamps_n6 = {} \n".format(len(timestamps_n6)))
+			print("Lenght of timepackets_n3 = {} \n".format(len(timepackets_n3)))
+		
+			
+			"""# Identify and remove duplicates in n3 and n6
 			n3_seq = n3.drop_duplicates(subset=n3.columns[1],keep='last')
 			n6_seq = n6.drop_duplicates(subset=n6.columns[1],keep='last')
 			
@@ -172,7 +209,7 @@ def calculate_metrics(n6,n3,stream,proto):
 			
 			print("Matched packets = {} \n".format(matched_packets))
 			print("Lenght of n6_sorted = {} \n".format(len(sorted_n6_seq)))
-			print("Lenght of n3_sorted = {} \n".format(len(sorted_n3_seq)))
+			print("Lenght of n3_sorted = {} \n".format(len(sorted_n3_seq)))"""
 		
 
 		
@@ -181,7 +218,7 @@ def calculate_metrics(n6,n3,stream,proto):
 		
 		#### acumulate delay values ####
 		
-		file_path = '/UPF_NWDAF/Delay_{}.txt'.format(stream)
+		file_path = '/UPF_NWDAF/temp_files/delay/Delay_{}.txt'.format(stream)
 		try:
 			with open(file_path, 'r') as file:
 				prev_delay = np.fromstring(file.readline().strip(), sep=',')
@@ -203,7 +240,7 @@ def calculate_metrics(n6,n3,stream,proto):
 		
 		#### Calculate troughput / bitrate ####
 		
-		command = "capinfos -u /UPF_NWDAF/n3-2_{}".format(stream) + ".pcap" + " | awk '{print $3}' | tail -n 1"
+		command = "capinfos -u /UPF_NWDAF/captures/n3-2_{}".format(stream) + ".pcap" + " | awk '{print $3}' | tail -n 1"
 		result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 		
 		if (result.returncode == 0) :
@@ -213,7 +250,7 @@ def calculate_metrics(n6,n3,stream,proto):
 		
 		packet_rate = matched_packets / capture_duration
 		
-		command = "capinfos -z /UPF_NWDAF/n3-2_{}".format(stream) + ".pcap" + "| awk '{print $4}' "
+		command = "capinfos -z /UPF_NWDAF/captures/n3-2_{}".format(stream) + ".pcap" + "| awk '{print $4}' "
 		result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 		
 		if (result.returncode == 0) :
@@ -242,7 +279,7 @@ def calculate_metrics(n6,n3,stream,proto):
 		plt.ylabel('Number of packets', fontsize=16)
 	
 			#### Save histogram ####
-		file_path_delay = "/UPF_NWDAF/delay_histogram_{}.png".format(stream)
+		file_path_delay = "/UPF_NWDAF/images/delay_histogram_{}.png".format(stream)
 		delay_hist.savefig(file_path_delay)
 
 		#### Bitrate Graphs ####
@@ -267,8 +304,8 @@ Metrics_A = calculate_metrics(n6_3_Stream_A, n3_2_Stream_A, stream_A, proto_A)
 Metrics_B = calculate_metrics(n6_3_Stream_B, n3_2_Stream_B, stream_B, proto_B)
 
 #### Write to Metric files ####
-with open('/UPF_NWDAF/metrics_' + stream_A + '.txt', 'w') as f:
+with open('/UPF_NWDAF/temp_files/metrics/metrics_' + stream_A + '.txt', 'w') as f:
 	f.write(Metrics_A)
-with open('/UPF_NWDAF/metrics_' + stream_B + '.txt', 'w') as f:
+with open('/UPF_NWDAF/temp_files/metrics/metrics_' + stream_B + '.txt', 'w') as f:
 	f.write(Metrics_B)
 	

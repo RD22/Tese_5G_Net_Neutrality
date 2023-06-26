@@ -27,7 +27,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 # Create a FileHandler and set the file name and mode (append or overwrite)
-file_handler = logging.FileHandler('log_file.txt', mode='w')  # 'a' for append, 'w' for overwrite
+file_handler = logging.FileHandler('NWDAF_server_log_file.txt', mode='w')  # 'a' for append, 'w' for overwrite
 
 # Create a Formatter and set the format for the log messages
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -96,7 +96,7 @@ async def home():
 		</html>
 		""".format(message=message)
 	else:
-		response = await send_file('index.html')
+		response = await send_file('web_page/index.html')
 		response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
 		response.headers['Pragma'] = 'no-cache'
 		response.headers['Expires'] = '0'
@@ -158,7 +158,7 @@ async def handler():
 			'$SHELL &\''.format(stream_A, stream_B, subprocess_completed, Target_Period))
 			subprocess_instance = subprocess.Popen(command)
 		
-		html = await render_template('analytics.html', Subscription_Correlation_ID = 
+		html = await render_template('web_page/analytics.html', Subscription_Correlation_ID = 
 			Subscription_Correlation_ID, Target_Period = Target_Period)
 		
 		response = Response(html)
@@ -198,15 +198,15 @@ async def get_delay_Stream_A_histogram(stream_name):
 	global Custom_A
 	
 	if Custom_A == True:
-		file_path = "/UPF_NWDAF/delay_histogram_custom_A.png"
+		file_path = "/UPF_NWDAF/images/delay_histogram_custom_A.png"
 	else:
-		file_path = "/UPF_NWDAF/delay_histogram_" + stream_A + ".png"
+		file_path = "/UPF_NWDAF/images/delay_histogram_" + stream_A + ".png"
 	
 	global subprocess_completed
 	if subprocess_completed and os.path.exists(file_path):
 		return await send_file(file_path, mimetype='image/png')
 	elif subprocess_completed and not os.path.exists(file_path):
-		return await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+		return await send_file('/UPF_NWDAF/images/empty_placeholder.png', mimetype='image/png')
 	else:
 		return "Please wait until the subprocess completes."
 
@@ -218,15 +218,15 @@ async def get_delay_Stream_B_histogram(stream_name):
 	global Custom_B
 	
 	if Custom_B == True:
-		file_path = "/UPF_NWDAF/delay_histogram_custom_B.png"
+		file_path = "/UPF_NWDAF/images/delay_histogram_custom_B.png"
 	else:
-		file_path = "/UPF_NWDAF/delay_histogram_" + stream_B + ".png"
+		file_path = "/UPF_NWDAF/images/delay_histogram_" + stream_B + ".png"
 		
 	global subprocess_completed
 	if subprocess_completed and os.path.exists(file_path):
 		return await send_file(file_path, mimetype='image/png')
 	elif subprocess_completed and not os.path.exists(file_path):
-		return await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+		return await send_file('/UPF_NWDAF/images/empty_placeholder.png', mimetype='image/png')
 	else:
 		return "Please wait until the subprocess completes."
 
@@ -239,16 +239,16 @@ async def get_bitrate_graph_Stream_A(stream_name):
 	global Custom_A
 	
 	if Custom_A == True:
-		file_path = "/UPF_NWDAF/bitrate_graph_custom_A.png"
+		file_path = "/UPF_NWDAF/images/bitrate_graph_custom_A.png"
 	else:
-		file_path = "/UPF_NWDAF/bitrate_graph_" + stream_A + ".png"
+		file_path = "/UPF_NWDAF/images/bitrate_graph_" + stream_A + ".png"
 		
 
 	global subprocess_completed
 	if subprocess_completed and os.path.exists(file_path):
 		return await send_file(file_path, mimetype='image/png')
 	elif subprocess_completed and not os.path.exists(file_path):
-		return await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+		return await send_file('/UPF_NWDAF/images/empty_placeholder.png', mimetype='image/png')
 	else:
 		return "Please wait until the subprocess completes."
 
@@ -258,16 +258,16 @@ async def get_bitrate_graph_Stream_B(stream_name):
 	global Custom_B
 	
 	if Custom_B == True:
-		file_path = "/UPF_NWDAF/bitrate_graph_custom_B.png"
+		file_path = "/UPF_NWDAF/images/bitrate_graph_custom_B.png"
 	else:
-		file_path = "/UPF_NWDAF/bitrate_graph_" + stream_B + ".png"
+		file_path = "/UPF_NWDAF/images/bitrate_graph_" + stream_B + ".png"
 		
 
 	global subprocess_completed
 	if subprocess_completed and os.path.exists(file_path):
 		return await send_file(file_path, mimetype='image/png')
 	elif subprocess_completed and not os.path.exists(file_path):
-		return await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+		return await send_file('/UPF_NWDAF/images/empty_placeholder.png', mimetype='image/png')
 	else:
 		return "Please wait until the subprocess completes."
 
@@ -281,9 +281,9 @@ async def metrics_A():
 	global Custom_A
 
 	if Custom_A == True:
-		file_path = '/UPF_NWDAF/metrics_custom_A.txt'
+		file_path = '/UPF_NWDAF/temp_files/metrics/metrics_custom_A.txt'
 	else:
-		file_path = "/UPF_NWDAF/metrics_" + stream_A + ".txt"
+		file_path = "/UPF_NWDAF/temp_files/metrics/metrics_" + stream_A + ".txt"
 	
 	if subprocess_completed and os.path.exists(file_path):
 		response = await send_file(file_path)
@@ -301,9 +301,9 @@ async def metrics_B():
 	global Custom_B
 	
 	if Custom_B == True:
-		file_path = '/UPF_NWDAF/metrics_custom_B.txt'
+		file_path = '/UPF_NWDAF/temp_files/metrics/metrics_custom_B.txt'
 	else:
-		file_path = '/UPF_NWDAF/metrics_' + stream_B + '.txt'
+		file_path = '/UPF_NWDAF/temp_files/metrics/metrics_' + stream_B + '.txt'
 	
 	if subprocess_completed and os.path.exists(file_path):
 		response = await send_file(file_path)
@@ -336,11 +336,11 @@ async def get_Delay_Histogram_Final_A(stream_name):
 	global Custom_A
 	
 	if Custom_A == True:
-		file_path_1 = "Delay_custom_A.txt"
-		file_path_2 = "/UPF_NWDAF/delay_histogram_Final_custom_A.png"
+		file_path_1 = "temp_files/delay/Delay_custom_A.txt"
+		file_path_2 = "/UPF_NWDAF/images/delay_histogram_Final_custom_A.png"
 	else:
-		file_path_1 = "Delay_{}".format(stream_A) + ".txt"
-		file_path_2 = "/UPF_NWDAF/delay_histogram_Final_{}.png".format(stream_A)
+		file_path_1 = "temp_files/delay/Delay_{}".format(stream_A) + ".txt"
+		file_path_2 = "/UPF_NWDAF/images/delay_histogram_Final_{}.png".format(stream_A)
 		
 	if subprocess_completed and os.path.exists(file_path_1):
 		with open(file_path_1, 'r') as file:
@@ -355,12 +355,12 @@ async def get_Delay_Histogram_Final_A(stream_name):
 		delay_hist = plt.figure(figsize=(20, 12))
 		
 		plt.hist(delay, bins=bins, alpha=0.5, color='blue')
-		plt.xticks(bins, [('{:.2f}' if x < 10 else '{:.1f}').format(x) for x in bins], fontsize=16)
+		plt.xticks(bins, [('{:.2f}' if x < 10 else '{:.1f}').format(x) for x in bins], fontsize=20)
 		
-		plt.yticks(fontsize=16)
-		plt.title("Delay histogram for {}".format(stream_A) + " over {} seconds".format(sub.Target_Period), fontsize=20)
-		plt.xlabel('Delay (ms)', fontsize=16)
-		plt.ylabel('Number of packets', fontsize=16)
+		plt.yticks(fontsize=20)
+		plt.title("Delay histogram for {}".format(stream_A) + " over {} seconds".format(sub.Target_Period), fontsize=24)
+		plt.xlabel('Delay (ms)', fontsize=20)
+		plt.ylabel('Number of packets', fontsize=20)
 				
 		delay_hist.savefig(file_path_2)
 
@@ -368,7 +368,7 @@ async def get_Delay_Histogram_Final_A(stream_name):
 	
 		return await send_file(file_path_2, mimetype='image/png')
 	else:
-		return await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+		return await send_file('/UPF_NWDAF/images/empty_placeholder.png', mimetype='image/png')
 		
 @app.route('/Delay_Histogram_Final_B/<stream_name>')
 async def get_Delay_Histogram_Final_B(stream_name):
@@ -379,11 +379,11 @@ async def get_Delay_Histogram_Final_B(stream_name):
 	global Custom_B
 	
 	if Custom_B == True:
-		file_path_1 = "Delay_custom_B.txt"
-		file_path_2 = "/UPF_NWDAF/delay_histogram_Final_custom_B.png"
+		file_path_1 = "temp_files/delay/Delay_custom_B.txt"
+		file_path_2 = "/UPF_NWDAF/images/delay_histogram_Final_custom_B.png"
 	else:
-		file_path_1 = "Delay_{}".format(stream_B) + ".txt"
-		file_path_2 = "/UPF_NWDAF/delay_histogram_Final_{}.png".format(stream_B)
+		file_path_1 = "temp_files/delay/Delay_{}".format(stream_B) + ".txt"
+		file_path_2 = "/UPF_NWDAF/images/delay_histogram_Final_{}.png".format(stream_B)
 		
 	if subprocess_completed and os.path.exists(file_path_1):
 		with open(file_path_1, 'r') as file:
@@ -398,11 +398,11 @@ async def get_Delay_Histogram_Final_B(stream_name):
 
 		delay_hist = plt.figure(figsize=(20, 12))
 		plt.hist(delay, bins=bins, alpha=0.5, color='blue')
-		plt.xticks(bins, [('{:.2f}' if x < 10 else '{:.1f}').format(x) for x in bins], fontsize=16)
-		plt.yticks(fontsize=16)
-		plt.title("Delay histogram for {}".format(stream_B) + " over {} seconds".format(sub.Target_Period), fontsize=20)
-		plt.xlabel('Delay (ms)', fontsize=16)
-		plt.ylabel('Number of packets', fontsize=16)
+		plt.xticks(bins, [('{:.2f}' if x < 10 else '{:.1f}').format(x) for x in bins], fontsize=20)
+		plt.yticks(fontsize=20)
+		plt.title("Delay histogram for {}".format(stream_B) + " over {} seconds".format(sub.Target_Period), fontsize=24)
+		plt.xlabel('Delay (ms)', fontsize=20)
+		plt.ylabel('Number of packets', fontsize=20)
 				
 		delay_hist.savefig(file_path_2)
 
@@ -410,7 +410,7 @@ async def get_Delay_Histogram_Final_B(stream_name):
 	
 		return await send_file(file_path_2, mimetype='image/png')
 	else:
-		return await send_file('/UPF_NWDAF/empty_placeholder.png', mimetype='image/png')
+		return await send_file('/UPF_NWDAF/images/empty_placeholder.png', mimetype='image/png')
 
 
 #### 	Final Metrics 	####
@@ -427,14 +427,14 @@ async def get_Final_Metrics_A():
 	### define file_paths ###
 	
 	if Custom_A == True:
-		file_path_delay = "Delay_custom_A.txt"
-		file_path_loss = "/UPF_NWDAF/Loss_custom_A.txt"
-		file_path_bitrate = "/UPF_NWDAF/previous_bitrate_custom_A.txt"
+		file_path_delay = "temp_files/delay/Delay_custom_A.txt"
+		file_path_loss = "/UPF_NWDAF/temp_files/loss/Loss_custom_A.txt"
+		file_path_bitrate = "/UPF_NWDAF/temp_files/throughput/previous_bitrate_custom_A.txt"
 		file_path_final_metrics = "/UPF_NWDAF/final_metrics_custom_A.txt"
 	else:
-		file_path_delay = "Delay_{}".format(stream_A) + ".txt"
-		file_path_loss = '/UPF_NWDAF/Loss_{}.txt'.format(stream_A)
-		file_path_bitrate = '/UPF_NWDAF/previous_bitrate_{}.txt'.format(stream_A)
+		file_path_delay = "temp_files/delay/Delay_{}".format(stream_A) + ".txt"
+		file_path_loss = '/UPF_NWDAF/temp_files/loss/Loss_{}.txt'.format(stream_A)
+		file_path_bitrate = '/UPF_NWDAF/temp_files/throughput/previous_bitrate_{}.txt'.format(stream_A)
 		file_path_final_metrics = '/UPF_NWDAF/final_metrics_{}.txt'.format(stream_A)
 		
 	### open delay file ###
@@ -502,14 +502,14 @@ async def get_Final_Metrics_B():
 	### define file_paths ###
 	
 	if Custom_B == True:
-		file_path_delay = "Delay_custom_B.txt"
-		file_path_loss = "/UPF_NWDAF/Loss_custom_B.txt"
-		file_path_bitrate = "/UPF_NWDAF/previous_bitrate_custom_B.txt"
+		file_path_delay = "temp_files/delay/Delay_custom_B.txt"
+		file_path_loss = "/UPF_NWDAF/temp_files/loss/Loss_custom_B.txt"
+		file_path_bitrate = "/UPF_NWDAF/temp_files/throughput/previous_bitrate_custom_B.txt"
 		file_path_final_metrics = "/UPF_NWDAF/final_metrics_custom_B.txt"
 	else:
-		file_path_delay = "Delay_{}".format(stream_B) + ".txt"
-		file_path_loss = '/UPF_NWDAF/Loss_{}.txt'.format(stream_B)
-		file_path_bitrate = '/UPF_NWDAF/previous_bitrate_{}.txt'.format(stream_B)
+		file_path_delay = "temp_files/delay/Delay_{}".format(stream_B) + ".txt"
+		file_path_loss = '/UPF_NWDAF/temp_files/loss/Loss_{}.txt'.format(stream_B)
+		file_path_bitrate = '/UPF_NWDAF/temp_files/throughput/previous_bitrate_{}.txt'.format(stream_B)
 		file_path_final_metrics = '/UPF_NWDAF/final_metrics_{}.txt'.format(stream_B)
 		
 	### open delay file ###

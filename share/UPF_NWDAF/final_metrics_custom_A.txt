@@ -1,1 +1,6 @@
-No stream activity for 52.94.17.140/32 && 12.1.1.2 && HTTP/2 tcp during 25 s
+	Final Metrics for 188.65.126.0/24 && 12.1.1.2 && HTTP/2 tcp (15 s): 
+ 
+ Packet loss ratio = 22.51 % 
+ Average delay = 50.07 ms 
+ Standard deviation of delay = 0.07 ms 
+ Average throughput = 34.7 Mbit/s 

@@ -1,0 +1,6 @@
+	Metrics for RTP (26 -> 30): 
+ 
+ Packet loss = 0.00 % 
+ Average delay = 0.90 ms 
+ Standard deviation of delay = 1.18 ms 
+ Throughput = 10.3 Mbit/s 

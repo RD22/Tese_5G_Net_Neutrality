@@ -1,6 +1,0 @@
-	Final Metrics for 52.223.0.0/16 && 12.1.1.2 && HTTP/2 tcp (15 s): 
- 
- Packet loss ratio = 22.08 % 
- Average delay = -16.10 ms 
- Standard deviation of delay = 44.01 ms 
- Average throughput = 3.7 Mbit/s 

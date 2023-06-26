@@ -1,6 +1,6 @@
-	Final Metrics for YOUTUBE (60 s): 
+	Final Metrics for YOUTUBE (30 s): 
  
- Packet loss ratio = 4.67 % 
- Average delay = 0.06 ms 
- Standard deviation of delay = 0.18 ms 
- Average throughput = 10.8 Mbit/s 
+ Packet loss ratio = 2.61 % 
+ Average delay = 0.10 ms 
+ Standard deviation of delay = 0.26 ms 
+ Average throughput = 13.5 Mbit/s 

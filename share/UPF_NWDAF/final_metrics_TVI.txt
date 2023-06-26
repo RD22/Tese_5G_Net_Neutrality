@@ -1,1 +1,6 @@
-No stream activity for TVI during 20 s
+	Final Metrics for TVI (15 s): 
+ 
+ Packet loss ratio = 0.00 % 
+ Average delay = 0.26 ms 
+ Standard deviation of delay = 0.10 ms 
+ Average throughput = 3.7 Mbit/s 

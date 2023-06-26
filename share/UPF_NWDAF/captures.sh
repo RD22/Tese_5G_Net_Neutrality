@@ -2,6 +2,11 @@
 
 #### Function to catch keyboard interrupt ####
 
+#touch /captures/n3-2.pcap
+#touch /captures/n6-3.pcap
+#chmod a+x /captures/n3-2.pcap
+#chmod a+x /captures/n6-3.pcap
+
 cleanup ()
 {
 	kill -s SIGTERM $!
@@ -87,7 +92,7 @@ export counter=0
 capture_loop()
 {       
 
-	tshark -C hash -i n6-3 -a duration:5 -w /UPF_NWDAF/n6-3.pcap  & tshark -C hash -i n3-2 -a duration:5 -w /UPF_NWDAF/n3-2.pcap
+	tshark -C hash -i n6-3 -a duration:5 -w /UPF_NWDAF/captures/n6-3.pcap  & tshark -C hash -i n3-2 -a duration:5 -w /UPF_NWDAF/captures/n3-2.pcap
 	
 	let counter++
 	cur_time=$((counter * 5))
@@ -95,38 +100,44 @@ capture_loop()
 	
 	# stream 1
 	if [ "$proto_1" = "HTTP/3" ]; then	
-		tshark -C hash -r /UPF_NWDAF/n6-3.pcap -Y "$filter_1" -w /UPF_NWDAF/n6-3_$stream_A.pcap  
-		tshark -C hash -r /UPF_NWDAF/n3-2.pcap -Y "$filter_1" -w /UPF_NWDAF/n3-2_$stream_A.pcap 	  
+		tshark -C hash -r /UPF_NWDAF/captures/n6-3.pcap -Y "$filter_1" -w /UPF_NWDAF/captures/n6-3_$stream_A.pcap  
+		tshark -C hash -r /UPF_NWDAF/captures/n3-2.pcap -Y "$filter_1" -w /UPF_NWDAF/captures/n3-2_$stream_A.pcap 	  
 		
-		tshark -C hash -r /UPF_NWDAF/n6-3_$stream_A.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n6-3_$stream_A.csv 2>/dev/null
+		tshark -C hash -r /UPF_NWDAF/captures/n6-3_$stream_A.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/csv/n6-3_$stream_A.csv 2>/dev/null
 		
-		tshark -C hash -r /UPF_NWDAF/n3-2_$stream_A.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n3-2_$stream_A.csv 2>/dev/null
+		tshark -C hash -r /UPF_NWDAF/captures/n3-2_$stream_A.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/csv/n3-2_$stream_A.csv 2>/dev/null
 		
 	elif [ "$proto_1" = "HTTP/2" ]; then
-		tshark -r /UPF_NWDAF/n6-3.pcap -Y "$filter_1" -w /UPF_NWDAF/n6-3_$stream_A.pcap >/dev/null 2>&1 
-		tshark -r /UPF_NWDAF/n3-2.pcap -Y "$filter_1" -w /UPF_NWDAF/n3-2_$stream_A.pcap >/dev/null 2>&1	  
+		tshark -r /UPF_NWDAF/captures/n6-3.pcap -Y "$filter_1" -w /UPF_NWDAF/captures/n6-3_$stream_A.pcap >/dev/null 2>&1 
+		tshark -r /UPF_NWDAF/captures/n3-2.pcap -Y "$filter_1" -w /UPF_NWDAF/captures/n3-2_$stream_A.pcap >/dev/null 2>&1	  
 				
-		tshark -r /UPF_NWDAF/n6-3_$stream_A.pcap -T fields -e frame.time_epoch -e tcp.seq -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n6-3_$stream_A.csv 2>/dev/null
+		tshark -r /UPF_NWDAF/captures/n6-3_$stream_A.pcap -T fields -e frame.time_epoch -e tcp.seq -e ip.src -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/csv/n6-3_$stream_A.csv 2>/dev/null	
 		
-		tshark -r /UPF_NWDAF/n3-2_$stream_A.pcap -T fields -e frame.time_epoch -e tcp.seq -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n3-2_$stream_A.csv 2>/dev/null
+		tshark -r /UPF_NWDAF/captures/n3-2_$stream_A.pcap -T fields -e ip.src -E aggregator=" " -E quote=n | awk 'BEGIN {print "ip.src"} {print $2}' > /UPF_NWDAF/n3-2_ip_src_$stream_A.csv 2> /dev/null
+		
+		tshark -r /UPF_NWDAF/captures/n3-2_$stream_A.pcap -T fields -e frame.time_epoch -e tcp.seq -E header=y -E separator=, -E quote=d -E occurrence=f | paste -d, - /UPF_NWDAF/n3-2_ip_src_$stream_A.csv > /UPF_NWDAF/csv/n3-2_$stream_A.csv
+		
 	fi
 		
 	# stream 2	
 	if [ "$proto_2" = "HTTP/3" ]; then
-		tshark -C hash -r /UPF_NWDAF/n6-3.pcap -Y "$filter_2" -w /UPF_NWDAF/n6-3_$stream_B.pcap >/dev/null 2>&1 
-		tshark -C hash -r /UPF_NWDAF/n3-2.pcap -Y "$filter_2" -w /UPF_NWDAF/n3-2_$stream_B.pcap >/dev/null 2>&1	  
+		tshark -C hash -r /UPF_NWDAF/captures/n6-3.pcap -Y "$filter_2" -w /UPF_NWDAF/captures/n6-3_$stream_B.pcap >/dev/null 2>&1 
+		tshark -C hash -r /UPF_NWDAF/captures/n3-2.pcap -Y "$filter_2" -w /UPF_NWDAF/captures/n3-2_$stream_B.pcap >/dev/null 2>&1	  
 	
-		tshark -C hash -r /UPF_NWDAF/n6-3_$stream_B.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n6-3_$stream_B.csv 2>/dev/null
+		tshark -C hash -r /UPF_NWDAF/captures/n6-3_$stream_B.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/csv/n6-3_$stream_B.csv 2>/dev/null
 		
-		tshark -C hash -r /UPF_NWDAF/n3-2_$stream_B.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n3-2_$stream_B.csv 2>/dev/null
+		tshark -C hash -r /UPF_NWDAF/captures/n3-2_$stream_B.pcap -T fields -e frame.time_epoch -e data.md5_hash -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/csv/n3-2_$stream_B.csv 2>/dev/null
 	
 	elif [ "$proto_2" = "HTTP/2" ]; then
-		tshark -r /UPF_NWDAF/n6-3.pcap -Y "$filter_2" -w /UPF_NWDAF/n6-3_$stream_B.pcap >/dev/null 2>&1 
-		tshark -r /UPF_NWDAF/n3-2.pcap -Y "$filter_2" -w /UPF_NWDAF/n3-2_$stream_B.pcap >/dev/null 2>&1	  
+		tshark -r /UPF_NWDAF/captures/n6-3.pcap -Y "$filter_2" -w /UPF_NWDAF/captures/n6-3_$stream_B.pcap >/dev/null 2>&1 
+		tshark -r /UPF_NWDAF/captures/n3-2.pcap -Y "$filter_2" -w /UPF_NWDAF/captures/n3-2_$stream_B.pcap >/dev/null 2>&1	  
 	
-		tshark -r /UPF_NWDAF/n6-3_$stream_B.pcap -T fields -e frame.time_epoch -e tcp.seq -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n6-3_$stream_B.csv 2>/dev/null
+		tshark -r /UPF_NWDAF/captures/n6-3_$stream_B.pcap -T fields -e frame.time_epoch -e tcp.seq -e ip.src -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/csv/n6-3_$stream_B.csv 2>/dev/null
 		
-		tshark -r /UPF_NWDAF/n3-2_$stream_B.pcap -T fields -e frame.time_epoch -e tcp.seq -E header=y -E separator=, -E quote=d -E occurrence=f > /UPF_NWDAF/n3-2_$stream_B.csv 2>/dev/null
+		tshark -r /UPF_NWDAF/captures/n3-2_$stream_B.pcap -T fields -e ip.src -E aggregator=" " -E quote=n | awk 'BEGIN {print "ip.src"} {print $2}' > /UPF_NWDAF/n3-2_ip_src_$stream_B.csv 2> /dev/null	
+		
+		tshark -r /UPF_NWDAF/captures/n3-2_$stream_B.pcap -T fields -e frame.time_epoch -e tcp.seq -E header=y -E separator=, -E quote=d -E occurrence=f | paste -d, - /UPF_NWDAF/n3-2_ip_src_$stream_B.csv > /UPF_NWDAF/csv/n3-2_$stream_B.csv
+	
 	fi
 	
 	python3 /UPF_NWDAF/calculate_metrics.py "$stream_A" "$stream_B" "$proto_1" "$proto_2" $cur_time
@@ -156,131 +167,63 @@ captures()
 echo -e "$3"
 
 
+remove_files() {
+	if [[ -f "$1" ]]; then
+	    rm "$1"
+	fi
+}
+
 if [ "$3" = "False"  ]; then
+	
 	#### Remove previous delay histograms ####
 
-	if [[ -f "/UPF_NWDAF/delay_histogram_$1.png" ]]; then
-	    rm /UPF_NWDAF/delay_histogram_$1.png
-	fi
-
-	if [[ -f "/UPF_NWDAF/delay_histogram_$2.png" ]]; then
-	    rm /UPF_NWDAF/delay_histogram_$2.png
-	fi
-	
-	if [[ -f "/UPF_NWDAF/delay_histogram_custom_A.png" ]]; then
-	    rm /UPF_NWDAF/delay_histogram_custom_A.png
-	fi
-
-	if [[ -f "/UPF_NWDAF/delay_histogram_custom_B.png" ]]; then
-	    rm /UPF_NWDAF/delay_histogram_custom_B.png
-	fi
+	remove_files "/UPF_NWDAF/images/delay_histogram_$1.png"
+	remove_files "/UPF_NWDAF/images/delay_histogram_$2.png"
+	remove_files "/UPF_NWDAF/images/delay_histogram_custom_A.png" 
+	remove_files "/UPF_NWDAF/images/delay_histogram_custom_B.png"	
 
 	#### Remove Previous bitrate files ####
-
-	if [[ -f "/UPF_NWDAF/previous_bitrate_$1.txt" ]]; then
-	    rm /UPF_NWDAF/previous_bitrate_$1.txt
-	fi
-
-	if [[ -f "/UPF_NWDAF/previous_bitrate_$2.txt" ]]; then
-	    rm /UPF_NWDAF/previous_bitrate_$2.txt
-	fi
 	
-	if [[ -f "/UPF_NWDAF/previous_bitrate_custom_A.txt" ]]; then
-	    rm /UPF_NWDAF/previous_bitrate_custom_A.txt
-	fi
-
-	if [[ -f "/UPF_NWDAF/previous_bitrate_custom_B.txt" ]]; then
-	    rm /UPF_NWDAF/previous_bitrate_custom_B.txt
-	fi
+	remove_files "/UPF_NWDAF/temp_files/throughput/previous_bitrate_$1.txt"
+	remove_files "/UPF_NWDAF/temp_files/throughput/previous_bitrate_$2.txt" 
+	remove_files "/UPF_NWDAF/temp_files/throughput/previous_bitrate_custom_A.txt"	
+	remove_files "/UPF_NWDAF/temp_files/throughput/previous_bitrate_custom_B.txt"	
 
 	#### Remove previous bitrate graphs ####
 
-	if [[ -f "/UPF_NWDAF/bitrate_graph_$1.png" ]]; then
-	    rm /UPF_NWDAF/bitrate_graph_$1.png
-	fi
+	remove_files "/UPF_NWDAF/images/bitrate_graph_$1.png"
+	remove_files "/UPF_NWDAF/images/bitrate_graph_$2.png" 
+	remove_files "/UPF_NWDAF/images/bitrate_graph_custom_A.png"	
+	remove_files "/UPF_NWDAF/images/bitrate_graph_custom_B.png"	
 
-	if [[ -f "/UPF_NWDAF/bitrate_graph_$2.png" ]]; then
-	    rm /UPF_NWDAF/bitrate_graph_$2.png
-	fi
-	
-	if [[ -f "/UPF_NWDAF/bitrate_graph_custom_A.png" ]]; then
-	    rm /UPF_NWDAF/bitrate_graph_custom_A.png
-	fi
-
-	if [[ -f "/UPF_NWDAF/bitrate_graph_custom_B.png" ]]; then
-	    rm /UPF_NWDAF/bitrate_graph_custom_B.png
-	fi
-	
 	####	Remove txt delay files	 ####
 	
-	if [[ -f "/UPF_NWDAF/Delay_$1.txt" ]]; then
-	    rm /UPF_NWDAF/Delay_$1.txt
-	fi
-
-	if [[ -f "/UPF_NWDAF/Delay_$2.txt" ]]; then
-	    rm /UPF_NWDAF/Delay_$2.txt
-	fi
-	
-	if [[ -f "/UPF_NWDAF/Delay_custom_A.txt" ]]; then
-	    rm /UPF_NWDAF/Delay_custom_A.txt
-	fi
-
-	if [[ -f "/UPF_NWDAF/Delay_custom_B.txt" ]]; then
-	    rm /UPF_NWDAF/Delay_custom_B.txt
-	fi
+	remove_files "/UPF_NWDAF/temp_files/delay/Delay_$1.txt"
+	remove_files "/UPF_NWDAF/temp_files/delay/Delay_$2.txt"
+	remove_files "/UPF_NWDAF/temp_files/delay/Delay_custom_A.txt"	
+	remove_files "/UPF_NWDAF/temp_files/delay/Delay_custom_B.txt"
 	
 	####	Remove txx loss files	 ####
 	
-	if [[ -f "/UPF_NWDAF/Loss_$1.txt" ]]; then
-	    rm /UPF_NWDAF/Loss_$1.txt
-	fi
-
-	if [[ -f "/UPF_NWDAF/Loss_$2.txt" ]]; then
-	    rm /UPF_NWDAF/Loss_$2.txt
-	fi
-	
-	if [[ -f "/UPF_NWDAF/Loss_custom_A.txt" ]]; then
-	    rm /UPF_NWDAF/Loss_custom_A.txt
-	fi
-
-	if [[ -f "/UPF_NWDAF/Loss_custom_B.txt" ]]; then
-	    rm /UPF_NWDAF/Loss_custom_B.txt
-	fi
-	
+	remove_files "/UPF_NWDAF/temp_files/loss/Loss_$1.txt"
+	remove_files "/UPF_NWDAF/temp_files/loss/Loss_$2.txt"
+	remove_files "/UPF_NWDAF/temp_files/loss/Loss_custom_A.txt"	
+	remove_files "/UPF_NWDAF/temp_files/loss/Loss_custom_B.txt"
+		
 	#### pcap files ####
 	
-	if [[ -f "/UPF_NWDAF/n3-2_$1.pcap" ]]; then
-	    rm /UPF_NWDAF/n3-2_$1.pcap
-	fi
-
-	if [[ -f "/UPF_NWDAF/n6-3_$1.pcap" ]]; then
-	    rm /UPF_NWDAF/n6-3_$1.pcap
-	fi
+	remove_files "/UPF_NWDAF/captures/n3-2_$1.pcap"
+	remove_files "/UPF_NWDAF/captures/n6-3_$1.pcap"
 	
-	if [[ -f "/UPF_NWDAF/n3-2_$2.pcap" ]]; then
-	    rm /UPF_NWDAF/n3-2_$2.pcap
-	fi
-
-	if [[ -f "/UPF_NWDAF/n6-3_$2.pcap" ]]; then
-	    rm /UPF_NWDAF/n6-3_$2.pcap
-	fi
+	remove_files "/UPF_NWDAF/captures/n3-2_$2.pcap"	
+	remove_files "/UPF_NWDAF/captures/n6-3_$2.pcap"
 	
-	if [[ -f "/UPF_NWDAF/n3-2_custom_A.pcap" ]]; then
-	    rm /UPF_NWDAF/n3-2_custom_A.pcap
-	fi
-
-	if [[ -f "/UPF_NWDAF/n3-2_custom_B.pcap" ]]; then
-	    rm /UPF_NWDAF/n3-2_custom_B.pcap
-	fi
+	remove_files "/UPF_NWDAF/captures/n3-2_custom_A.pcap"
+	remove_files "/UPF_NWDAF/captures/n3-2_custom_B.pcap"
 	
-	if [[ -f "/UPF_NWDAF/n6-3_custom_A.pcap" ]]; then
-	    rm /UPF_NWDAF/n6-3_custom_A.pcap
-	fi
+	remove_files "/UPF_NWDAF/captures/n6-3_custom_A.pcap"
+	remove_files "/UPF_NWDAF/captures/n6-3_custom_B.pcap"
 
-	if [[ -f "/UPF_NWDAF/n6-3_custom_B.pcap" ]]; then
-	    rm /UPF_NWDAF/n6-3_custom_B.pcap
-	fi
-	
 	
 	captures "no-loop" 
 else

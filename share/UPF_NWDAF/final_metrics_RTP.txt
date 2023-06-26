@@ -1,1 +1,6 @@
-No stream activity for RTP during 25 s
+	Final Metrics for RTP (30 s): 
+ 
+ Packet loss ratio = 0.00 % 
+ Average delay = 0.68 ms 
+ Standard deviation of delay = 1.47 ms 
+ Average throughput = 5.4 Mbit/s 

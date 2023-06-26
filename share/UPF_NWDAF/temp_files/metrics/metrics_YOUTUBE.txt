@@ -1,0 +1,6 @@
+	Metrics for YOUTUBE (26 -> 30): 
+ 
+ Packet loss = 1.45 % 
+ Average delay = 0.09 ms 
+ Standard deviation of delay = 0.21 ms 
+ Throughput = 14.8 Mbit/s 

@@ -6,12 +6,12 @@ demo-oai-public-net --ip 192.168.70.140 --cap-add=NET_ADMIN \
 #sudo docker-compose -f docker-compose-gnbsim-vpp.yaml up -d 
 #sudo docker-compose -f docker-compose-ueransim-vpp.yaml up -d
 sudo docker-compose -f docker-compose-ueransim-vpp.yaml up -d ueransim 
-sudo docker-compose -f docker-compose-ueransim-vpp.yaml up -d ueransim2 
+#sudo docker-compose -f docker-compose-ueransim-vpp.yaml up -d ueransim2 
 sleep 14
 sudo docker exec ueransim ip r d default
 sudo docker exec ueransim ip r a default via 12.1.1.2
-sudo docker exec ueransim2 ip r d default
-sudo docker exec ueransim2 ip r a default via 12.1.1.3
+#sudo docker exec ueransim2 ip r d default
+#sudo docker exec ueransim2 ip r a default via 12.1.1.3
 sudo docker exec vpp-upf ip r a default via 192.168.70.1
 sudo xhost +
 #docker exec ueransim /bin/bash -c "\

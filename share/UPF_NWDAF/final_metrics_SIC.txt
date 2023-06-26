@@ -1,6 +1,1 @@
-	Final Metrics for SIC (25 s): 
- 
- Packet loss ratio = 3.20 % 
- Average delay = 0.02 ms 
- Standard deviation of delay = 0.01 ms 
- Average throughput = 1.0 Mbit/s 
+No stream activity for SIC during 15 s

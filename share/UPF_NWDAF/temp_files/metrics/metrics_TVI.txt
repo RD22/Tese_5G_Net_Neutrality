@@ -1,0 +1,6 @@
+	Metrics for TVI (11 -> 15): 
+ 
+ Packet loss = 0.00 % 
+ Average delay = 0.26 ms 
+ Standard deviation of delay = 0.10 ms 
+ Throughput = 11.2 Mbit/s 
